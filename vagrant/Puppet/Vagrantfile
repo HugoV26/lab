@@ -1,0 +1,28 @@
+Vagrant.configure("2") do |config|
+    #Puppet Master
+    config.vm.define "puppet-master" do |node1|
+        node1.vm.box = "generic/rocky8"
+        node1.vm.box_check_update = false
+        node1.vm.hostname = "master"
+        node1.vm.network "private_network", ip: "192.168.56.40"
+        node1.vm.provider "virtualbox" do |vb|
+            vb.memory = 8192
+            vb.cpus = 2
+            vb.name = "Puppet_Master"
+        end
+        node1.vm.provision "file", source: "./files/puppet-enterprise-2023.7.0-el-8-x86_64.tar.gz", destination: "/tmp/"
+    end
+    #Puppet Agent
+    config.vm.define "puppet-agent" do |node2|
+        node2.vm.box = "generic/rocky8"
+        node2.vm.hostname = "agent1"
+        node2.vm.box_check_update = false
+        node2.vm.network "private_network", ip: "192.168.56.41"
+        node2.vm.provider "virtualbox" do |vb|
+            vb.memory = 4096
+            vb.cpus = 2
+            vb.name = "Puppet_Node1"
+        end
+        node2.vm.provision "file", source: "./files/puppet-agent-8.6.0-1.el8.x86_64.rpm", destination: "/tmp/"
+    end
+end
