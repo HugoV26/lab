@@ -1,0 +1,40 @@
+- name: Download wordpress
+  shell: wget -P /var/www/html https://wordpress.org/latest.zip
+
+- name: Unzip Wordpress
+  shell: unzip -o /var/www/html/latest.zip -d /var/www/html/
+
+- name: Copy wordpress directory 
+  copy:
+    src: /var/www/html/wordpress/
+    dest: /var/www/html/
+    remote_src: yes
+
+- name: Copy wp-config-sample.php.j2 to remote server
+  template:
+    src: wp-config-sample.php.j2
+    dest: /var/www/html/wp-config.php
+
+- name: Get wpcli
+  shell: wget -P /tmp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+
+- name: Copy wp-cli to bin
+  copy:
+    src: /tmp/wp-cli.phar
+    dest: /usr/bin/wp
+    owner: root
+    group: root
+    mode: 755
+    remote_src: yes
+
+- name: Configure wordpress credentials
+  shell: /usr/bin/wp core install --url="{{ url }}" --title="{{ title }}" --admin_user="{{ wordpress_admin_user }}" --admin_password="{{ wordpress_admin_password }}"  --admin_email="{{ wordpress_admin_email }}" --path='/var/www/html'
+
+- name: Restart httpd
+  service:
+    name: httpd
+    state: restarted
+
+- debug:
+    msg:
+    - "Now you can access to wordpress index http://192.168.56.17/"

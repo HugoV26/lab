@@ -1,0 +1,49 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.vbguest.auto_update = false
+  # Ansible Client
+  config.vm.define "ansible-client" do |node1|
+    node1.vm.box = "generic/rocky8"
+    node1.vm.box_check_update = false
+    node1.vm.hostname = "client-node"
+    node1.vm.network "private_network", ip: "192.168.56.17"
+    node1.vm.provider "virtualbox" do |vb|
+      vb.memory = 4096
+      vb.cpus = 2
+    end
+    node1.vm.provision "shell", inline: <<-SHELL
+      sudo dnf update -y
+      sudo echo "192.168.56.16    master-node" >> /etc/hosts
+      sudo sed -i "s/.*PubkeyAuthentication.*/PubkeyAuthentication yes/g" /etc/ssh/sshd_config
+      sed -i "s/.*PasswordAuthentication.*/PasswordAuthentication yes/g" /etc/ssh/sshd_config
+      sudo systemctl restart sshd
+    SHELL
+  end
+  #Ansible Master
+  config.vm.define "ansible-master" do |node2|
+    node2.vm.box = "generic/rocky8"
+    node2.vm.hostname = "master-node"
+    node2.vm.box_check_update = false
+    node2.vm.network "private_network", ip: "192.168.56.16"
+    node2.vm.provider "virtualbox" do |vb|
+      vb.memory = 4096
+      vb.cpus = 2
+    end
+    node2.vm.provision "file", source: "./ansible", destination: "/tmp/"
+    node2.vm.provision "shell", inline: <<-SHELL
+      sudo dnf update -y
+      sudo dnf install sshpass -y
+      sudo dnf install ansible -y
+      sudo echo "192.168.56.17    client-node" >> /etc/hosts
+      sudo cp -r /tmp/ansible/* /etc/ansible/
+    SHELL
+    node2.vm.provision "shell", privileged: false, inline: <<-SHELL
+      ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa <<<y >/dev/null 2>&1
+      ssh-keyscan 192.168.56.17 >> ~/.ssh/known_hosts
+      sshpass -p vagrant ssh-copy-id -i ~/.ssh/id_rsa.pub vagrant@192.168.56.17
+      ansible-playbook /etc/ansible/playbooks/wordpress.yml -i /etc/ansible/inventories/hosts_demo
+    SHELL
+  end
+end

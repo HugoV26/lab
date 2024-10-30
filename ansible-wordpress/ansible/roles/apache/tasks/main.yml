@@ -1,0 +1,39 @@
+- name: Install Apache
+  package:
+    name: httpd
+    state: present
+
+- name: Start service httpd
+  service:
+    name: httpd
+    state: started
+    enabled: yes
+
+- name: Disable firewall
+  service:
+    name: firewalld
+    state: stopped
+
+- name: Reset php
+  shell: sudo dnf module reset php
+
+- name: Set php7.4
+  shell: "sudo dnf module install php:7.4 -y"
+
+- name: Install php packages and others
+  package:
+    name:
+      - php-gd 
+      - php-soap 
+      - php-intl 
+      - php-mysqlnd 
+      - php-pdo 
+      - php-pecl-zip 
+      - php-fpm 
+      - php-opcache 
+      - php-curl 
+      - php-zip 
+      - php-xmlrpc 
+      - wget
+      - zip
+    state: present

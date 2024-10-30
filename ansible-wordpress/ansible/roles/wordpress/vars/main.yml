@@ -1,0 +1,8 @@
+wordpress_db: "wordpress"
+wordpress_db_user_admin: "wordpress_admin"
+wordpress_db_user_passwd: "Wordpress123."
+wordpress_admin_user: "admwordpress"
+wordpress_admin_password: "qazwsx123."
+wordpress_admin_email: "hugo@mail.com"
+url: "http://10.0.0.17/"
+title: "UNIR-HEVZ"
