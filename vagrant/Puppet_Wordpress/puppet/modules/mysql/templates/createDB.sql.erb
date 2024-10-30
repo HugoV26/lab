@@ -1,0 +1,5 @@
+CREATE DATABASE wordpress;
+CREATE USER wordpress_admin@localhost IDENTIFIED BY 'temporal123';
+GRANT ALL PRIVILEGES ON wordpress.* TO wordpress_admin@localhost IDENTIFIED BY 'temporal123';
+FLUSH PRIVILEGES;
+exit

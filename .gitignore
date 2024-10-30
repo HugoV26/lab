@@ -3,3 +3,4 @@ vagrant/Ubuntu_GUI_VM/.vagrant/
 vagrant/Puppet/.vagrant/
 vagrant/Puppet/files
 terraform/AWS/.env
+vagrant/Puppet_Wordpress/.vagrant/
