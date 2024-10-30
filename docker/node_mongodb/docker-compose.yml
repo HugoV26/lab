@@ -1,0 +1,32 @@
+version: "3"
+
+networks:
+  my_network:
+    name: my_network
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+services:
+  web:
+    container_name: unirapp
+    restart: always
+    build: .
+    ports:
+      - "5000:3000"
+    links:
+      - mongodb
+    volumes: 
+      - .:/usr/src/app
+    networks:
+      - my_network
+  
+  mongodb:
+    container_name: mymongodb
+    image: mongo:4.4.28
+    restart: always
+    ports:
+      - "27018:27017"
+    networks:
+      - my_network
