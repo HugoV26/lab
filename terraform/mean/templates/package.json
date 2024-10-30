@@ -1,0 +1,14 @@
+{
+    "name": "node-unir-app",
+    "version": "1.0.0.",
+    "description": "NGINX and Node.js deployment using terraform",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js"
+    },
+    "author": "HEVZ",
+    "license": "GPL-3.0",
+    "dependencies": {
+        "mongodb": "^6.3.0"
+    }
+}
