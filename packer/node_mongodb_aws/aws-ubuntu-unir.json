@@ -1,0 +1,55 @@
+{
+    "variables": {
+        "aws_access_key": "",
+        "aws_secret_key": "",
+        "ami_name": "packer-image-nodejs",
+        "instance_type": "t2.micro",
+        "region": "us-east-1",
+        "source_ami": "ami-06aa3f7caf3a30282",
+        "ssh_username": "ubuntu"
+    },
+    "builders": [{
+        "type": "amazon-ebs",
+        "access_key": "{{user `aws_access_key`}}",
+        "secret_key": "{{user   `aws_secret_key`}}",
+        "ami_name": "{{user `ami_name`}}",
+        "instance_type": "{{user `instance_type`}}",
+        "region": "{{user `region`}}",
+        "source_ami": "{{user `source_ami`}}",
+        "ssh_username": "{{user `ssh_username`}}"
+    }],
+    "provisioners": [
+        {
+            "type": "shell",
+            "script": "./scripts/nodejs.sh"
+        },
+        {
+            "type": "file",
+            "source": "./templates/package.json",
+            "destination": "/home/ubuntu/"
+        },
+        {
+            "type": "file",
+            "source": "./templates/index.js",
+            "destination": "/home/ubuntu/"
+        },
+        {
+            "type": "file",
+            "source": "./templates/unirapp.service",
+            "destination": "/home/ubuntu/"
+        },
+        {
+            "type": "shell",
+            "inline": "sudo apt-get install -y nginx"
+        },
+        {
+            "type": "file",
+            "source": "./templates/default",
+            "destination": "/home/ubuntu/"
+        },
+        {
+            "type": "shell",
+            "script": "./scripts/finish_installation.sh"
+        }
+    ]
+}

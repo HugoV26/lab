@@ -1,0 +1,11 @@
+{
+    "name": "node-unir-app",
+    "version": "1.0.0.",
+    "description": "Despliegue de Nginx y Nodejs mediante una imagen generada por Packer",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js"
+    },
+    "author": "HEVZ",
+    "license": "GPL-3.0"
+}
