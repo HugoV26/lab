@@ -2,3 +2,4 @@ vagrant/Simple_Rocky8_VM/.vagrant/
 vagrant/Ubuntu_GUI_VM/.vagrant/
 vagrant/Puppet/.vagrant/
 vagrant/Puppet/files
+terraform/AWS/.env
